@@ -15,8 +15,8 @@
                 <div class="left-col">
                     <div class="header-left">
                         <div class="user-info">
-                            <img src="https://picsum.photos/200" alt="">
-                            <p>Nome Utente</p>
+                            <img :src="user.avatar" alt="">
+                            <p>{{user.name}}</p>
                         </div>
                         <div class="button-container-user">
                             <i class="fas fa-circle-notch"></i>
@@ -26,47 +26,32 @@
                     </div>
                     <div class="search-bar">
                         <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Cerca una chat">
+                        <input type="text" placeholder="Cerca una chat" v-model="searchInput" @keyup="selectVisible">
                     </div>
                     <div class="select-chat">
-                        <a href="#end-chat">
+                        <a href="#end-chat" v-for="(contact, index) in contacts" v-if="contact.visible" @click="chatActive = index">
                             <div class="chat-box">
-                                <img src="https://picsum.photos/200" alt="">
+                                <img :src="contact.avatar" alt="">
                                 <div class="chat-box-info">
                                     <div class="chat-box-text">
-                                        <p class="chat-name">Nome chat</p>
-                                        <p class="last-msg">Ultimo messagio</p>
+                                        <p class="chat-name">{{contact.name}}</p>
+                                        <p class="last-msg">{{contact.messages.at(-1).text}}</p>
                                     </div>
                                     <div class="chat-box-data">
-                                        <span class="DD-MM-YYYY">22/01/2022</span>
-                                        <span class="hh-mm">11:56</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#end-chat">
-                            <div class="chat-box">
-                                <img src="https://picsum.photos/200" alt="">
-                                <div class="chat-box-info">
-                                    <div class="chat-box-text">
-                                        <p class="chat-name">Nome chat</p>
-                                        <p class="last-msg">Ultimo messagio</p>
-                                    </div>
-                                    <div class="chat-box-data">
-                                        <span class="DD-MM-YYYY">22/01/2022</span>
-                                        <span class="hh-mm">11:56</span>
+                                        <span class="DD-MM-YYYY">{{contact.messages.at(-1).date.substring(0, 11)}}</span>
+                                        <span class="hh-mm">{{contact.messages.at(-1).date.substring(12, 16)}}</span>
                                     </div>
                                 </div>
                             </div>
                         </a>
                     </div>
                 </div>
-                <div class="right-col">
+                <div class="right-col" v-if="chatActive != null">
                     <div class="header-right">
                         <div class="current-chat-box">
-                            <img src="https://picsum.photos/200" alt="">
+                            <img :src="contacts[chatActive].avatar" alt="">
                             <div class="current-chat-info">
-                                <p class="">Nome chat</p>
+                                <p class="">{{contacts[chatActive].name}}</p>
                                 <p class="last-access">Ultimo accesso: 22/01/2022 alle: 11:56</p>
                             </div>
                         </div>
@@ -77,85 +62,17 @@
                         </div>
                     </div>
                     <div class="chat-messages">
-                        <div class="msg-box sent">
-                            <p>Questo è un bel messagio inviato</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box received">
-                            <p>ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box sent">
-                            <p>Questo è un bel messagio inviato molto molto molto lungo  molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box sent">
-                            <p>Questo è un bel messagio inviato</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box received">
-                            <p>Questo è un bel messagio ricevuto molto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungo</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box sent">
-                            <p>Questo è un bel messagio inviato</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box received">
-                            <p>Questo è un bel messagio ricevuto</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box sent">
-                            <p>Questo è un bel messagio inviato molto molto molto lungo  molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box sent">
-                            <p>Questo è un bel messagio inviato</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box received">
-                            <p>Questo è un bel messagio ricevuto molto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungo</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box sent">
-                            <p>Questo è un bel messagio inviato</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box received">
-                            <p>Questo è un bel messagio ricevuto</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box sent">
-                            <p>Questo è un bel messagio inviato molto molto molto lungo  molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box sent">
-                            <p>Questo è un bel messagio inviato</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box received">
-                            <p>Questo è un bel messagio ricevuto molto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungo</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box sent">
-                            <p>Questo è un bel messagio inviato</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box received">
-                            <p>Questo è un bel messagio ricevuto</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box sent">
-                            <p>Questo è un bel messagio inviato molto molto molto lungo  molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo molto molto molto lungo</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box sent">
-                            <p>Questo è un bel messagio inviato</p>
-                            <span>22/01/2022 11:56</span>
-                        </div>
-                        <div class="msg-box received">
-                            <p>Questo è un bel messagio ricevuto molto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungomolto molto molto lungo</p>
-                            <span>22/01/2022 11:56</span>
+                        <div class="msg-box sent" 
+                        :class="{'sent' : message.status == 'sent', 
+                        'received' : message.status == 'received'}" 
+                        v-for="(message, index) in contacts[chatActive].messages"
+                        >   
+                            <i class="fas fa-caret-down" :class="{'first-sent' : message.status == 'sent',
+                            'first-received' : message.status == 'received'}"
+                            v-if="firstInASeries(message.status)"
+                            ></i>
+                            <p>{{message.text}}</p>
+                            <span>{{message.date.substring(0, 16)}}</span>
                         </div>
                         <div id="end-chat"></div>
                     </div>
@@ -168,6 +85,9 @@
                             <i class="fas fa-microphone"></i>
                         </div>
                     </div>
+                </div>
+                <div class="right-col empty-placeholder" v-else>
+                    <i class="fas fa-comment-slash"></i>
                 </div>
             </main>
         </div>
