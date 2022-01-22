@@ -264,7 +264,8 @@ main {
     display: flex;
     flex-direction: column;
     padding: 20px 100px;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .chat-messages::-webkit-scrollbar {
@@ -292,9 +293,8 @@ main {
     margin-top: 3px;
 }
 
-.msg-box i {
+.msg-box > i {
     position: absolute;
-    color: #262d31;
     font-size: 30px;
 }
 
@@ -308,6 +308,37 @@ i.first-received {
     top: -11px;
     left: -9px;
     color: #262d31;
+}
+
+.msg-box .open-menu {
+    display: none;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    padding: 5px;
+    border-radius: 100%;
+    background-color: inherit;
+    cursor: pointer;
+}
+
+.msg-box:hover .open-menu {
+    display: block;
+}
+
+.msg-menu {
+    position: absolute;
+    z-index: 1;
+    width: max-content;
+    padding: 5px 0px;
+    background-color: #2a2f32;
+}
+
+.msg-menu div {
+    padding: 5px 20px;
+}
+
+.msg-menu div:hover {
+    background-color: #131c21;
 }
 
 .sent {
@@ -343,6 +374,13 @@ i.first-received {
 .mic-box {
     width: 25px;
     text-align: center;
+    cursor: pointer;
+}
+
+.plane-box {
+    width: 25px;
+    text-align: center;
+    cursor: pointer;
 }
 
 .write-bar input {

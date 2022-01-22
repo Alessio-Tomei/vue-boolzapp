@@ -1,8 +1,10 @@
 let app = new Vue({
     el: '#app',
     data: {
-        firstSent: true,
-        firstRecieved: true,
+        whichMenu: null,
+        openMenu: false,
+        inputEmpty: true,
+        newMessageInput: '',
         searchInput: '',
         chatActive: null,
         user: {
@@ -226,25 +228,55 @@ let app = new Vue({
                 }
             });
         },
-        firstInASeries: function(msgStatus) {
-            if (msgStatus == 'sent') {
-                console.log(this.firstSent);
-                if (this.firstSent) {
-                    this.firstSent = !this.firstSent;
-                    this.firstRecieved = true;
-                    return true;
-                } else {
-                    return false;
-                }
+        firstInASeries: function(index) {
+            if (index == 0) {
+                return true;
+            } else if (this.contacts[this.chatActive].messages[index].status != this.contacts[this.chatActive].messages[index - 1].status) {
+                return true;
             } else {
-                if (this.firstRecieved) {
-                    this.firstRecieved = !this.firstRecieved;
-                    this.firstSent = true;
-                    return true;
-                } else {
-                    return false;
-                }
+                return false;
             }
+        },
+        sendMessage: function() {
+            let chatMessageBox = document.querySelector('.chat-messages');
+            let indexChat = this.chatActive;
+            let newMessageObject = {
+                date: dayjs().format('DD/MM/YYYY HH:mm:ss'),
+                text: this.newMessageInput,
+                status: 'sent'
+            };
+            this.contacts[indexChat].messages.push(newMessageObject);
+            this.newMessageInput = '';
+            this.inputEmpty = true;
+            setTimeout(() => {
+                chatMessageBox.scrollTop = chatMessageBox.scrollHeight;
+            }, 0);
+            this.randomResponse(indexChat);
+        },
+        controlInput: function() {
+            if (this.newMessageInput.trim() == '') {
+                this.newMessageInput = '';
+                this.inputEmpty = true;
+            } else {
+                this.inputEmpty = false;
+            }
+        },
+        randomResponse: function(indexChat) {
+            setTimeout(() => {
+                let chatMessageBox = document.querySelector('.chat-messages');
+                let newMessageObject = {
+                    date: dayjs().format('DD/MM/YYYY HH:mm:ss'),
+                    text: 'testo da randomizzare',
+                    status: 'received'
+                };
+                this.contacts[indexChat].messages.push(newMessageObject);
+                setTimeout(() => {
+                    chatMessageBox.scrollTop = chatMessageBox.scrollHeight;
+                }, 0);
+            }, 3000);
+        },
+        deleteMsg: function(indexMsg) {
+            this.contacts[this.chatActive].messages.splice(indexMsg,1);
         }
     }
 });
