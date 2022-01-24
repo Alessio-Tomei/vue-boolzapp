@@ -29,15 +29,15 @@
                         <input type="text" placeholder="Cerca una chat" v-model="searchInput" @keyup="selectVisible">
                     </div>
                     <div class="select-chat">
-                        <a href="#end-chat" v-for="(contact, index) in contacts" v-if="contact.visible" @click="chatActive = index">
-                            <div class="chat-box">
+                        <a href="#end-chat" v-for="(contact, index) in contacts" v-if="contact.visible" @click="chatActive = index, setLastAccessMsg()">
+                            <div class="chat-box" :class="{'box-active' : chatActive == index}">
                                 <img :src="contact.avatar" alt="">
                                 <div class="chat-box-info">
                                     <div class="chat-box-text">
                                         <p class="chat-name">{{contact.name}}</p>
-                                        <p class="last-msg">{{contact.messages.at(-1).text}}</p>
+                                        <p class="last-msg" v-if="contact.messages.length > 0">{{contact.messages.at(-1).text}}</p>
                                     </div>
-                                    <div class="chat-box-data">
+                                    <div class="chat-box-data" v-if="contact.messages.length > 0">
                                         <span class="DD-MM-YYYY">{{contact.messages.at(-1).date.substring(0, 11)}}</span>
                                         <span class="hh-mm">{{contact.messages.at(-1).date.substring(12, 16)}}</span>
                                     </div>
@@ -52,13 +52,27 @@
                             <img :src="contacts[chatActive].avatar" alt="">
                             <div class="current-chat-info">
                                 <p class="">{{contacts[chatActive].name}}</p>
-                                <p class="last-access">Ultimo accesso: 22/01/2022 alle: 11:56</p>
+                                <p class="last-access">{{lastAccessMsg}}</p>
                             </div>
                         </div>
                         <div class="button-container-current-chat">
-                            <i class="fas fa-search"></i>
-                            <i class="fas fa-paperclip"></i>
-                            <i class="fas fa-ellipsis-v"></i>
+                            <div>
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div>
+                                <i class="fas fa-paperclip"></i>
+                            </div>
+                            <div class="open-menu" @click="openChatMenu = !openChatMenu">
+                                <i class="fas fa-ellipsis-v"></i>
+                                <div class="msg-menu" v-if="openChatMenu">
+                                    <div @click="deleteAllMsg">
+                                        <p>Elimina messaggi</p>
+                                    </div>
+                                    <div @click="deleteChat">
+                                        <p>Elimina chat</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="chat-messages">

@@ -1,6 +1,16 @@
 let app = new Vue({
     el: '#app',
     data: {
+        textForRandomResponse: [
+            'ok',
+            'frase 2',
+            'anche a te e fanmiglia',
+            'sono positivo',
+            'non posso sono in quarantena',
+            '16 + 18 quanto fa?'
+        ],
+        openChatMenu: false,
+        lastAccessMsg: '',
         whichMenu: null,
         openMenu: false,
         inputEmpty: true,
@@ -216,9 +226,18 @@ let app = new Vue({
                     }
                 ]
             },
+            {
+                name: 'Marica',
+                avatar: 'https://picsum.photos/id/1040/200',
+                visible: true,
+                messages: [
+
+                ]
+            },
         ],
     },    
     methods: {
+
         selectVisible: function() {
             this.contacts.forEach(contact => {
                 if (contact.name.toLowerCase().includes(this.searchInput.toLowerCase())) {
@@ -251,7 +270,7 @@ let app = new Vue({
             setTimeout(() => {
                 chatMessageBox.scrollTop = chatMessageBox.scrollHeight;
             }, 0);
-            this.randomResponse(indexChat);
+            this.randomResponse(indexChat, this.contacts[indexChat].name, this.contacts[indexChat].avatar);
         },
         controlInput: function() {
             if (this.newMessageInput.trim() == '') {
@@ -261,22 +280,79 @@ let app = new Vue({
                 this.inputEmpty = false;
             }
         },
-        randomResponse: function(indexChat) {
+        randomResponse: function(indexChat, chatName ,chatAvatar) {
+            this.lastAccessMsg = 'Sta scrivendo...';
             setTimeout(() => {
+                if ( !(this.contacts[indexChat].name == chatName)) {
+                    const oldIndex = indexChat;
+                    for (let i = oldIndex-1; i >= 0; i--) {
+                        if (!this.contacts[i].name == chatName) {
+                            indexChat = i;
+                        }                   
+                    }
+                    if (indexChat == oldIndex ) {
+                        this.createChat(chatName, chatAvatar);
+                        indexChat = this.contacts.length - 1; 
+                    }
+                }
                 let chatMessageBox = document.querySelector('.chat-messages');
+                let newText = this.randomText();
                 let newMessageObject = {
                     date: dayjs().format('DD/MM/YYYY HH:mm:ss'),
-                    text: 'testo da randomizzare',
+                    text: newText,
                     status: 'received'
                 };
                 this.contacts[indexChat].messages.push(newMessageObject);
-                setTimeout(() => {
-                    chatMessageBox.scrollTop = chatMessageBox.scrollHeight;
-                }, 0);
+                if (indexChat == this.chatActive) {
+                    this.lastAccessMsg = 'Online';
+                    setTimeout(() => {
+                        chatMessageBox.scrollTop = chatMessageBox.scrollHeight;
+                    }, 0);
+                    setTimeout(() => {
+                        this.setLastAccessMsg();
+                    }, 3000);      
+                }
             }, 3000);
+
         },
         deleteMsg: function(indexMsg) {
             this.contacts[this.chatActive].messages.splice(indexMsg,1);
+        },
+        setLastAccessMsg: function() {
+            let msgArray = this.contacts[this.chatActive].messages;
+            for (let i = msgArray.length-1; i >= 0; i--) {
+                if (msgArray[i].status == 'received') {
+                    return this.lastAccessMsg = 'Ultimo accesso: ' + msgArray[i].date.substring(0, 16);
+                }          
+            }
+            return this.lastAccessMsg = 'Offline';
+        },
+        deleteAllMsg: function() {
+            this.contacts[this.chatActive].messages.splice(0, this.contacts[this.chatActive].messages.length);
+            this.setLastAccessMsg();
+        },
+        deleteChat: function() {
+            this.contacts.splice(this.chatActive, 1);
+            this.chatActive = null;
+        },
+        createChat: function(chatName, chatAvatar = 'https://picsum.photos/id/999/200') {
+            let newContatObj = {
+                name: chatName,
+                avatar: chatAvatar,
+                visible: true,
+                messages: [
+
+                ]
+            }
+            this.contacts.push(newContatObj);
+        },
+        randomText: function() {
+            console.log('dentro');
+            console.log(this.randomInt(0, this.textForRandomResponse.length -1));
+            return this.textForRandomResponse[this.randomInt(0, this.textForRandomResponse.length -1)];
+        },
+        randomInt: function(min, max) {
+            return Math.floor(Math.random()*(max-min+1)+min);
         }
     }
 });
